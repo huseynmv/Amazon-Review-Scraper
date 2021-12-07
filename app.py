@@ -41,12 +41,17 @@ def submit():
 
 @app.route("/scrape")
 def scrape():
-
+    global baseURL
     scrape_with_crochet(baseURL=baseURL) # Passing that URL to our Scraping Function
-
     time.sleep(20) # Pause the function while the scrapy spider is running
-    
-    return jsonify(output_data) # Returns the scraped data after being running for 20 seconds.
+    # for i in output_data:
+    #     b = list(i.values())
+    b = []
+    a = list(output_data[0].keys())
+    for i in output_data:
+        b.append(list(i.values()))
+    # return jsonify(output_data) # Returns the scraped data after being running for 20 seconds.
+    return render_template('test.html', a=a, b=b)
   
   
 @crochet.run_in_reactor
@@ -61,6 +66,9 @@ def scrape_with_crochet(baseURL):
 #This will append the data to the output data list.
 def _crawler_result(item, response, spider):
     output_data.append(dict(item))
+    print(output_data)
+    
+    x = output_data[0]
 
 
 if __name__== "__main__":
