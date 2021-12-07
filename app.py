@@ -33,8 +33,8 @@ def submit():
         baseURL = s
         
         # This will remove any existing file with the same name so that the scrapy will not append the data to any previous file.
-        if os.path.exists("C:\\Users\\99450\\Desktop\\yusif\\tutorial\\tutorial\\output.json"): 
-        	os.remove("C:\\Users\\99450\\Desktop\\yusif\\tutorial\\tutorial\\output.json")
+        if os.path.exists("c:\\Users\\99450\\Desktop\\yusif\\tutorial\\outputfile.json"): 
+        	os.remove("c:\\Users\\99450\\Desktop\\yusif\\tutorial\\outputfile.json")
 
         return redirect(url_for('scrape')) # Passing to the Scrape function
 
