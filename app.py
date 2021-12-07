@@ -7,43 +7,40 @@ from scrapy.crawler import CrawlerRunner
 from scrapy.signalmanager import dispatcher
 import time,os
 
-# Importing our Scraping Function from the amazon_scraping file
 
-from tutorial.tutorial.spiders.amazon_scraping import ReviewspiderSpider
 
-# Creating Flask App Variable
+from amazonScraper.amazonScraper.amazon_scraping import ReviewspiderSpider
+
+
 
 app = Flask(__name__)
 
 output_data = []
 crawl_runner = CrawlerRunner()
 
-# By Deafult Flask will come into this when we run the file
 @app.route('/')
 def index():
-	return render_template("index.html") # Returns index.html file in templates folder.
+	return render_template("index.html") 
 
 
-# After clicking the Submit Button FLASK will come into this
 @app.route('/', methods=['POST'])
 def submit():
     if request.method == 'POST':
-        s = request.form['url'] # Getting the Input Amazon Product URL
+        s = request.form['url'] 
         global baseURL
         baseURL = s
         
-        # This will remove any existing file with the same name so that the scrapy will not append the data to any previous file.
         if os.path.exists("c:\\Users\\99450\\Desktop\\yusif\\tutorial\\outputfile.json"): 
         	os.remove("c:\\Users\\99450\\Desktop\\yusif\\tutorial\\outputfile.json")
 
-        return redirect(url_for('scrape')) # Passing to the Scrape function
+        return redirect(url_for('scrape'))
 
 
 @app.route("/scrape")
 def scrape():
     global baseURL
-    scrape_with_crochet(baseURL=baseURL) # Passing that URL to our Scraping Function
-    time.sleep(20) # Pause the function while the scrapy spider is running
+    scrape_with_crochet(baseURL=baseURL) 
+    time.sleep(20) 
     # for i in output_data:
     #     b = list(i.values())
     b = []
@@ -56,14 +53,11 @@ def scrape():
   
 @crochet.run_in_reactor
 def scrape_with_crochet(baseURL):
-    # This will connect to the dispatcher that will kind of loop the code between these two functions.
     dispatcher.connect(_crawler_result, signal=signals.item_scraped)
     
-    # This will connect to the ReviewspiderSpider function in our scrapy file and after each yield will pass to the crawler_result function.
     eventual = crawl_runner.crawl(ReviewspiderSpider, category = baseURL)
     return eventual
 
-#This will append the data to the output data list.
 def _crawler_result(item, response, spider):
     output_data.append(dict(item))
     print(output_data)
